@@ -1,37 +1,52 @@
-'use client';
-import ProtectedRoute from '../../../../components/ProtectedRoute';
-import CourseForm from '../../../../components/CourseForm';
-import { courseApi } from '../../../../lib/api';
-import { useEffect, useState } from 'react';
-import { message } from 'antd';
-import { useRouter, useParams } from 'next/navigation';
+"use client";
+import { useEffect, useState } from "react";
+import { Form, Input, Button, message } from "antd";
+import { getCourse, updateCourse } from "../../../../lib/api";   // <-- FIXED
+import { useRouter } from "next/navigation";
 
-export default function EditPage() {
-  const params = useParams();
+export default function EditCourse({ params }) {
+  const { id } = params;
+  const [form] = Form.useForm();
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const [course, setCourse] = useState(null);
 
   useEffect(() => {
     (async () => {
-      const res = await courseApi.get(params.id);
-      setCourse(res.data);
+      try {
+        const data = await getCourse(id);
+        form.setFieldsValue(data);
+      } catch {
+        message.error("Failed to load");
+      } finally {
+        setLoading(false);
+      }
     })();
-  }, [params.id]);
+  }, []);
 
-  const handleSubmit = async (values) => {
-    await courseApi.update(params.id, values);
-    message.success('Updated');
-    router.push('/courses');
+  const onFinish = async (values) => {
+    try {
+      await updateCourse(id, values);
+      message.success("Updated!");
+      router.push("/courses");
+    } catch {
+      message.error("Update failed");
+    }
   };
 
-  if (!course) return <div style={{padding:20}}>Loading...</div>;
+  return loading ? (
+    <p>Loading...</p>
+  ) : (
+    <div className="p-4 max-w-lg mx-auto">
+      <h2>Edit Course</h2>
+      <Form form={form} layout="vertical" onFinish={onFinish}>
+        <Form.Item name="title" label="Title" rules={[{ required: true }]}>
+          <Input />
+        </Form.Item>
 
-  return (
-    <ProtectedRoute>
-      <div className="container">
-        <h2>Edit Course</h2>
-        <CourseForm onSubmit={handleSubmit} initialValues={course} />
-      </div>
-    </ProtectedRoute>
+        <Button type="primary" htmlType="submit">
+          Update
+        </Button>
+      </Form>
+    </div>
   );
 }
