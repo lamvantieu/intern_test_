@@ -7,8 +7,8 @@ import { LoginPayload, LoginResponse } from "@/types/auth";
 
 const LoginPage = () => {
     const [form, setForm] = useState < LoginPayload > ({
-        email: "test@gmail.com",
-        password: "123456",
+        email: "",
+        password: "",
     });
 
 const handleLogin = async () => {
