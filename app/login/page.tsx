@@ -1,44 +1,60 @@
 "use client";
 
 import { useState } from "react";
-import api from "../../lib/axios";
+import { useRouter } from "next/navigation";
+import api from "@/lib/axios"; 
 import Cookies from "js-cookie";
 import { LoginPayload, LoginResponse } from "@/types/auth";
 
 const LoginPage = () => {
-    const [form, setForm] = useState < LoginPayload > ({
-        email: "",
-        password: "",
-    });
+  const router = useRouter();
 
-const handleLogin = async () => {
-  if (email === "test@test.com" && password === "123456") {
-    const fakeToken =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.fake.payload";
+  const [form, setForm] = useState<LoginPayload>({
+    email: "",
+    password: "",
+  });
 
-    Cookies.set("token", fakeToken);
-    router.push("/detail");
-    return;
-  }
+  const handleLogin = async () => {
+    
+    if (
+      form.email === "test@test.com" &&
+      form.password === "123456"
+    ) {
+      Cookies.set("token", "fake-jwt-token");
+      router.push("/");
+      return;
+    }
+    try {
+      const res = await api.post<LoginResponse>("/login", form);
+      Cookies.set("token", res.data.token);
+      router.push("/");
+    } catch (err) {
+      alert("Login failed");
+    }
+  };
 
-  alert("Sai tài khoản hoặc mật khẩu");
-};
+  return (
+    <div>
+      <input
+        placeholder="Email"
+        value={form.email}
+        onChange={(e) =>
+          setForm({ ...form, email: e.target.value })
+        }
+      />
 
+      <input
+        type="password"
+        placeholder="Password"
+        value={form.password}
+        onChange={(e) =>
+          setForm({ ...form, password: e.target.value })
+        }
+      />
 
-    return (
-        <div>
-            <input
-                placeholder="Email"
-                onChange={e => setForm({ ...form, email: e.target.value })}
-            />
-            <input
-                type="password"
-                placeholder="Password"
-                onChange={e => setForm({ ...form, password: e.target.value })}
-            />
-            <button onClick={handleLogin}>Login</button>
-        </div>
-    );
+      <button onClick={handleLogin}>Login</button>
+    </div>
+  );
 };
 
 export default LoginPage;
