@@ -11,15 +11,19 @@ const LoginPage = () => {
         password: "123456",
     });
 
-    const handleLogin = async () => {
-        try {
-            const res = await api.post < LoginResponse > ("/login", form);
-            Cookies.set("token", res.data.token);
-            window.location.href = "/";
-        } catch (err) {
-            alert("Login failed");
-        }
-    };
+const handleLogin = async () => {
+  if (email === "test@test.com" && password === "123456") {
+    const fakeToken =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.fake.payload";
+
+    Cookies.set("token", fakeToken);
+    router.push("/detail");
+    return;
+  }
+
+  alert("Sai tài khoản hoặc mật khẩu");
+};
+
 
     return (
         <div>
