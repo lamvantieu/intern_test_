@@ -10,8 +10,7 @@
 3. Open http://localhost:3000/login
 
 **Login  **:
-- Email: `test@gmail.com`
-- Password: `123456`
+admin@gmail.com / 123456
 
 
 
