@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { Form, Input, Button, message } from "antd";
 import api from "@/lib/axios";
-import type { Course } from "../../type/course";
+import type { Course } from "@/types/course";
 
 const EditCoursePage = () => {
     const router = useRouter();
@@ -55,5 +55,6 @@ const EditCoursePage = () => {
 };
 
 export default EditCoursePage;
+
 
 
