@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import api from "@/lib/axios";
 import { Table, Button } from "antd";
-import type { Course } from "@/types/course";
+import type { Course } from "@/type/course";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 
@@ -76,3 +76,4 @@ const CoursePage = () => {
 };
 
 export default CoursePage;
+
